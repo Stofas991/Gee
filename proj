@@ -40,7 +40,7 @@ def solfege(title_hymn):
     skip2 = hymn_list[0:3:-3]                                                   # vase reseni
 
     # the skip2 list as a string, ', ' as a separator
-    skip2_str = ', '.join(skip2)                                               # vase reseni
+    skip2_str = ",".join(skip2)                                               # vase reseni
 
     return skip2_str
 
