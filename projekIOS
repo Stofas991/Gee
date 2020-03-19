@@ -1,0 +1,74 @@
+#!/bin/sh
+Files=$(find . -maxdepth 1 -type f | wc -l)
+Directs=$(find . -maxdepth 1 -type d | wc -l)
+names=$(ls -a)
+
+graph() {
+    x=0
+    if [$x -eq 0]
+    then
+        x=1
+        i=0
+        higher=100
+    fi
+    if [$i==0 ]; then
+        find -size -higher c
+        higher=1
+        i=1
+        graph
+    fi
+
+    if [$i>0] && [$i<3]
+    then
+        find -size -higher k
+        higher=$((higher * 10))
+        i=$((i + 1))
+        graph
+    fi
+
+    if [$i>2] && [$i<6]
+    then
+        if [$i==3]
+        then
+            higher=1
+            graph
+        fi
+        find -size -higherM
+        higher=$((higher * 10))
+        i=$((i + 1))
+        graph
+    fi
+
+    if [i>5] && [i<8]
+    then
+        if [i==6]
+        then
+            higher=1
+            graph
+        fi
+
+        if [i==7]
+        then
+            find -size +higher G
+            graph
+
+        find -size -higher G
+        i=$((i + 1))
+        graph
+        fi
+    fi    
+}
+graph
+echo "Directories: $Directs" >> datagraph.txt
+echo "All Files: $Files" >> datagraph.txt
+cat datagraph.txt
+rm datagraph.txt
+
+
+
+
+
+#i=0
+#if ($i<$(ls -A | wc -l))
+#do
+#    size=$(stat -c %s isj_proj3_xglosk01.py)
