@@ -2,73 +2,127 @@
 Files=$(find . -maxdepth 1 -type f | wc -l)
 Directs=$(find . -maxdepth 1 -type d | wc -l)
 names=$(ls -a)
+var="$1"
+i=0
+higher=100
 
 graph() {
-    x=0
-    if [$x -eq 0]
-    then
-        x=1
-        i=0
-        higher=100
-    fi
-    if [$i==0 ]; then
-        find -size -higher c
+    index=0
+    total="  :    " 
+    if [ $i -eq 0 ]; then  
+        count=$(find -maxdepth 1 -size -$((higher))c $location)
+        filnum=$(echo "$count" | wc -w)
+        
+        while [ $index -lt $filnum ]
+        do
+            total=$total"#"
+            index=$((index + 1))
+        done
+
+        echo "  <$higher B$total"
         higher=1
         i=1
+
         graph
     fi
 
-    if [$i>0] && [$i<3]
+    if [ $i -gt 0 ] && [ $i -le 3 ]
     then
-        find -size -higher k
+        count=$(find -maxdepth 1 -size -$((higher))k)
+        filnum=$(echo "$count" | wc -w)
+
+        while [ $index -lt $filnum ]
+        do
+            total=$total"#"
+            index=$((index + 1))
+        done
+
+
+        if [ $higher -eq 10 ]
+        then
+            total=$(echo "$total" | cut -c 1-)
+        fi
+
+
+        echo "  <$higher KiB$total"
         higher=$((higher * 10))
         i=$((i + 1))
         graph
     fi
 
-    if [$i>2] && [$i<6]
+    if [ $i -gt 3 ] && [ $i -le 7 ]
     then
-        if [$i==3]
+        if [ $i -eq 4 ]
         then
             higher=1
+            i=$((i + 1))
             graph
         fi
-        find -size -higherM
+        count=$(find -maxdepth 1 -size -$((higher))M)
+        filnum=$(echo "$count" | wc -w)
+
+        while [ $index -lt $filnum ]
+        do
+            total=$total"#"
+            index=$((index + 1))
+        done
+
+        echo "  <$higher MiB$total"
         higher=$((higher * 10))
         i=$((i + 1))
-        graph
+        graph   
     fi
 
-    if [i>5] && [i<8]
+    if [ $i -gt 7 ] && [ $i -le 9 ]
     then
-        if [i==6]
+        if [ $i -eq 8 ]
         then
             higher=1
+            count=$(find -maxdepth 1 -size -$((higher))G)
+            filnum=$(echo "$count" | wc -w)
+
+            while [ $index -lt $filnum ]
+            do
+               total=$total"#"
+               index=$((index + 1))
+            done 
+
+            echo "  <$higher GiB$total"
+            i=$((i + 1))
             graph
         fi
 
-        if [i==7]
+        if [ $i -eq 9 ]
         then
-            find -size +higher G
-            graph
+            count=$(find -maxdepth 1 -size +$((higher))G)
+            filnum=$(echo "$count" | wc -w)
 
-        find -size -higher G
-        i=$((i + 1))
-        graph
-        fi
+            while [ $index -lt $filnum ]
+            do
+                total=$total"#"
+                index=$((index + 1))
+            done
+
+            echo "  >$higher GiB$total"
+            i=$((i + 1))
+            graph
+        fi 
     fi    
+    if [ $i -gt 7 ]
+    then
+        exit
+    fi
+    
 }
+if [ -n "$var" ]
+then
+    location=$(pwd)
+fi
+echo "Directories: $Directs"
+echo "All Files: $Files"
+echo "File size histogram:"
 graph
-echo "Directories: $Directs" >> datagraph.txt
-echo "All Files: $Files" >> datagraph.txt
-cat datagraph.txt
-rm datagraph.txt
 
 
 
 
-
-#i=0
-#if ($i<$(ls -A | wc -l))
-#do
-#    size=$(stat -c %s isj_proj3_xglosk01.py)
